@@ -119,7 +119,7 @@ class Tree:
             yield p.element()          # but yield each element
 
     # Preorder 前序遍歷
-    def preorder(self):
+    def preorder(self): # 根節點 => 左子節點 => 右子節點
         '''Generate a preorder iteration of positions in the tree.'''
         if not self.is_empty():
             for p in self._subtree_preorder(self.root()):     # start recursion
@@ -133,8 +133,9 @@ class Tree:
             for other in self._subtree_preorder(c):     # do preorder of c's subtree
                 yield other
 
+
     # Postorder 後序遍歷
-    def postorder(self):
+    def postorder(self): # 左子節點 => 右子節點 => 根節點
         '''Generate a postorder iteration of positions in the tree.'''
         if not self.is_empty():
             for p in self._subtree_postorder(self.root()):  # start recursion
@@ -145,26 +146,20 @@ class Tree:
         for c in self.children(p):                     # for each child c
             for other in self._subtree_postorder(c):   # do postorder of c's subtree
                 yield other
-        yield p
+        yield p                                        # visit p after its subtrees
 
 
-
-    def positions(self):
+    def positions(self , type):
         '''Generate an iteration of the tree's positions.'''
-        return self.preorder()
+        if type == 'preorder':
+            return self.preorder()
+        
+        if type == 'postorder':
+            return self.postorder()
+        
+        if type == 'inorder':
+            return self.inorder()
 
-
-    # def breadthfirst(self):
-    #     '''Generate a breadth-first iteration of the positions of the tree.'''
-    #     if not self.is_empty():
-    #         fringe = LinkedQueue()             # known positions not yet yielded
-    #         fringe.enqueue(self.root())        # starting with the root
-            
-    #         while not fringe.is_empty():
-    #             p = fringe.dequeue()           # remove from front of the queue
-    #             yield p                        # report this position
-    #             for c in self.children(p):
-    #                 fringe.enqueue(c)          # add children to back of queue
 
 # Such binary trees are known as "decision trees" 決策樹
 # Recursive Binary Tree Definition
@@ -209,6 +204,24 @@ class BinaryTree(Tree):
             yield self.left(p)
         if self.right(p) is not None:
             yield self.right(p)
+
+    # Inorder 中序遍歷
+    def inorder(self):
+        '''Generate an inorder iteration of positions in the tree.'''
+        if not self.is_empty():
+            for p in self._subtree_inorder(self.root()):
+                yield p
+
+
+    def _subtree_inorder(self, p):
+        '''Generate an inorder iteration of positions in subtree rooted at p.'''
+        if self.left(p) is not None:                   # if left child exists, traverse its subtree
+            for other in self._subtree_inorder(self.left(p)):
+                yield other
+        yield p                                        # visit p between its subtrees
+        if self.right(p) is not None:                  # if right child exists, traverse its subtree
+            for other in self._subtree_inorder(self.right(p)):
+                yield other
 
 # 8.3 Implementing Trees
 # LinkedBinaryTree
@@ -390,7 +403,7 @@ class LinkedBinaryTree(BinaryTree):
             node._right = t2._root
             t2._root = None                   # set t2 instance to empty
             t2._size = 0
-
+    
 
 # 8.3.3 Linked Structure for General Trees
 # When representing a binary tree 
@@ -442,3 +455,72 @@ class LinkedBinaryTree(BinaryTree):
 # iter(T): Generate an iteration of all elemenets stored within tree T.
 
 
+### 8.4.5 Applications of Tree Traversals
+# We would like to have a mechanism for children to return information to the parent as part of the traversal process.
+# A custom solution to the disk space problem, with each level of recustion providing 
+
+
+### 8.4.6 Euler Tours and the Template Method Pattern *
+# The various applications described 
+# Furthermore, in some contexts it was important to know the depth of a position, or the complete path from the root to that position, or to return information from one level of the recursion to another.
+# For each of the previous 
+
+# adaptability
+# reusablility
+# In this section, we develop a more general framework for implementing tree traversals based on a concept known as "Euler tour traversal"
+# The Euler tour traversal of a general tree T can be informally defined as a "walk" around T, where we start by going from the root toward its leftmost child, viewing the edges of T as being "walls"
+# A "pre visit" occurs when first reaching the position, that is, when the walk passes immediately left of the node in our visualization.
+# A "post visit" occurs when the walk later proceeds upward from that position, that is, when the walk passes to the right of the node in our visualization.
+# The process of an Euler tour can easily be viewed recursively.
+
+# Algorithm eulertour(T, p):
+    # perform the "pre visit" action for position p
+    # for each child c in T.children(p) do
+        # eulertour(T, c)                                   {recursively tour the subtree rooted at c}
+    # perform the "post visit" action for position p
+
+# To allow customization, the primary algorithmm calls auxiliary functions
+
+class EulerTour:
+    '''Abstract base class for performing Euler tour of a tree.
+    
+    _hook_previsit and _hook_postvisit may be overridden by subclasses.
+    '''
+
+    def __init__(self, tree):
+        '''Prepare an Euler tour template for given tree.'''
+        self._tree = tree
+    
+
+    def tree(self):
+        '''Return reference to the tree being traversed.'''
+        return self._tree
+    
+
+    def execute(self):
+        '''Perform the tour and return any result from post visit of root.'''
+        if len(self._tree) > 0:
+            return self._tour(self._tree.root(), 0, [])  # start the recursion
+    
+
+    def _tour(self, p, d, path):
+        '''Perform tour of subtree rooted at Position p
+        p       Position of current node being visited
+        d       depth of p in the tree
+        path    list of indices of children on path from root to p
+        '''
+        self._hook_previsit(p, d, path)                     # "pre visit" p
+        results = []
+        path.append(0)                                      # add new index to end of path before recursion
+        for c in self._tree.children(p):
+            results.append(self._tour(c, d+1, path))        # recur on child's subtree
+            path[-1] += 1
+        path.pop()
+        answer = self._hook_postvisit(p, d, path, results)  # "post visit" p
+        return answer
+    
+    def _hook_previsit(self, p, d, path):
+        pass
+
+    def _hook_postvisit(self, p, d path, results):
+        pass
