@@ -477,3 +477,68 @@ class CostPerformanceDatabase:
 
 
 ### 10.5 Sets, Multisets, and Multimaps
+
+class MultiMap:
+    '''A multimap class built upon use of an underlying map for storage.'''
+    _MapType = dict
+
+    def __init__(self):
+        '''Create a new empty multimap instance.'''
+        self._map = self._MapType()
+        self._n = 0
+    
+
+    def __iter__(self):
+        '''Iterate through all (k, v) pairs in multimap.'''
+        for k, secondary in self._map.items():
+            for v in secondary:
+                yield(k, v)
+    
+
+    def add(self, k, v):
+        '''Add pair (k, v) to multimap.'''
+        container = self._map.setdefault(k, [])              # create empty list, if needed
+        container.append(v)
+        self._n += 1
+    
+
+    def pop(self, k):
+        '''Remove and return arbitrary (k, v) with key k (or raise KeyError).'''
+        secondary = self._map[k]                             # may raise KeyError
+        v = secondary.pop()
+        if len(secondary) == 0:
+            del self._map[k]                                 # no pairs left
+        self._n -= 1
+        return (k, v)
+    
+
+    def find(self, k):
+        '''Return arbitrary (k, v) pair with given key (or raise KeyError).'''
+        secondary = self._map[k]
+        return (k, secondary[0])
+    
+
+    def find_all(self, k):
+        '''Generate iteration of all (k, v) pairs with given key.'''
+        secondary = self._map.get(k, [])
+        for v in secondary:
+            yield (k, v)
+
+# Keys stored in the left subtree of p are less than k
+# Keys stored in the right subtree of p are greater than k.
+
+# first(): Return the position containing the least key, or None if the tree is empty.
+# last(): Return the position containing the greatest key, or None if empty tree.
+# before(p): Return the position containing the greatest key that is less than that of position p (i.e., the position that would be visited immediately)
+# The "first" position of a binary search tree can be 
+
+# Algorithm after(p):
+    # if right(p) is not None then:
+        # walk = right(p)
+        # while left(walk) is not None do
+            # walk = left(walk)   
+        # return walk      
+    # else:
+        # walk = p
+        # ancestor = parent(walk)
+        
