@@ -118,8 +118,8 @@ class Tree:
         for p in self.positions():     # use same order as positions()
             yield p.element()          # but yield each element
 
-    # Preorder 前序遍歷
-    def preorder(self): # 根節點 => 左子節點 => 右子節點
+    # Preorder Traversal
+    def preorder(self): # root -> left node -> right node
         '''Generate a preorder iteration of positions in the tree.'''
         if not self.is_empty():
             for p in self._subtree_preorder(self.root()):     # start recursion
@@ -134,8 +134,8 @@ class Tree:
                 yield other
 
 
-    # Postorder 後序遍歷
-    def postorder(self): # 左子節點 => 右子節點 => 根節點
+    # Postorder Traversal
+    def postorder(self): # left node -> right node -> root node
         '''Generate a postorder iteration of positions in the tree.'''
         if not self.is_empty():
             for p in self._subtree_postorder(self.root()):  # start recursion
@@ -148,6 +148,22 @@ class Tree:
                 yield other
         yield p                                        # visit p after its subtrees
 
+    # Inorder Traversal
+    def inorder(self):
+        '''Generate an inorder iteration of positions in the tree.'''
+        if not self.is_empty():
+            for p in self._subtree_inorder(self.root()):
+                yield p
+    
+    def _subtree_inorder(self, p):
+        '''Generate an inorder iteration of positions in subtree rooted at p.'''
+        if self.left(p) is not None:                                # if left child exists, traverse its subtree
+            for other in self._subtree_inorder(self.left(p)):       
+                yield other
+        yield p                                                     # visit p between its subtrees
+        if self.right(p) is not None:                               # if right child exists, traverse its subtree
+            for other in self._subtree_inorder(self.right(p)):
+                yield other
 
     def positions(self , type):
         '''Generate an iteration of the tree's positions.'''
@@ -205,23 +221,6 @@ class BinaryTree(Tree):
         if self.right(p) is not None:
             yield self.right(p)
 
-    # Inorder 中序遍歷
-    def inorder(self):
-        '''Generate an inorder iteration of positions in the tree.'''
-        if not self.is_empty():
-            for p in self._subtree_inorder(self.root()):
-                yield p
-
-
-    def _subtree_inorder(self, p):
-        '''Generate an inorder iteration of positions in subtree rooted at p.'''
-        if self.left(p) is not None:                   # if left child exists, traverse its subtree
-            for other in self._subtree_inorder(self.left(p)):
-                yield other
-        yield p                                        # visit p between its subtrees
-        if self.right(p) is not None:                  # if right child exists, traverse its subtree
-            for other in self._subtree_inorder(self.right(p)):
-                yield other
 
 # 8.3 Implementing Trees
 # LinkedBinaryTree
@@ -405,6 +404,13 @@ class LinkedBinaryTree(BinaryTree):
             t2._size = 0
     
 
+
+# 8.3.2 Array-Based Representation of a Binary Tree
+# An alternative representation of a binary tree T is based on a way of numbering the positions of T.
+# For every position of p of T, let f(p) be the integer defined as follows.
+# If p is the root of T, then f(p) = 0
+# If p is the left child of position q, then f(p) = 2f(q) + 1
+
 # 8.3.3 Linked Structure for General Trees
 # When representing a binary tree 
 # For a general tree, there is no a priori limit on the number of children that a node may have.
@@ -416,6 +422,9 @@ class LinkedBinaryTree(BinaryTree):
 # The pseudo-code for the preorder traversal of the subtree rooted 
 
 # 8.4.1
+# In a preorder traversal of a tree T, the root of T is visited first and then the subtrees rooted at its children are traversed recursively.
+# If the tree is ordered, then the subtrees are traversed according the order of the children.
+# The pseudo-code for the preorder traversal of the subtree rooted at a position p is shown in Code
 # 1. Preorder Traversal
 # Algorithm preorder(T, p):
     # perform the "visit" action for position p

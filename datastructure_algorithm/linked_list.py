@@ -145,9 +145,11 @@ class LinkedQueue :
     
 
     def traverse(self, e):
-        print('e._element is =>', e._element)
-        if e._next:
-            self.traverse(e._next)
+        if e:
+            print('e._element is =>', e._element)
+            if e._next:
+                self.traverse(e._next)
+        
 
     def count(self, node):
         self._count += 1

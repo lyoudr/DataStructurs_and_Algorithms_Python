@@ -335,3 +335,87 @@ class ArithmeticProgression(Progression):            # inherit from Progression
         increment     the fixed constant to add to each term (default 1)
         start         the first term of the progression (default 0)
         '''
+        super().__init__(start)                      # initialize base class
+        self._increment = increment
+    
+    def _advance(self):
+        '''Update current value by adding the fixed increment.'''
+        self._current += self._increment
+
+
+class GeometricProgression(Progression):             # inherit from Progression
+    '''Iterator producing a geometric progression.'''
+
+    def __init__(self, base = 2, start = 1):
+        '''Create a new geometric progression.
+        
+        base          the fixed constant multiplied to each term (default 2)
+        start         the first term of the progression (default 1)
+        '''
+        super().__init__(start)
+        self._base = base
+    
+    def _advance(self):
+        '''Update current value by multiplying it by the base value.'''
+        self._current *= self._base
+
+
+
+class FibonacciProgression(Progression):
+    '''Iterator producing a generalized Fibonacci progression.'''
+
+    def __init__(self, first = 0, second = 1):
+        '''Create a new fibonacci progression.
+        
+        first      the first term of the progression (default 0)
+        second     the second term of the progression (default 1)
+        '''
+        super().__init__(first)                     # start progression at first
+        self._prev = second - first
+    
+
+    def _advance(self):
+        '''Update current value by taking sum of previous two.'''
+        self._prev, self._current = self._current, self._prev + self._current
+
+
+# 2.4.3 Abstract Base Classes
+# we say a class is an "abstract base class" if its only purpose is to serve as a base class through inheritance
+# More formally, an "abstract base" class is one that cannot be directly instantiated .
+# "Concrete class" is one that can be instantiated.
+# tempelate method pattern => is when an abstract base class provides concrete behaviors that rely upon 
+
+from abc import ABCMeta, abstractmethod
+
+class Sequence(metaclass = ABCMeta):
+    '''Our own version of collections.Sequence abstract base class.'''
+
+    @abstractmethod
+    def __len__(self):
+        '''Return the length of the sequence.'''
+    
+    @abstractmethod
+    def __getitem__(self, j):
+        '''Return the element at index j of the sequence.'''
+    
+    def __contains__(self, val):
+        '''Return True if val found in the sequence; False otherwise.'''
+        for j in range(len(self)):
+            if self[j] == val:
+                return True
+        raise ValueError('value not in sequence')
+    
+    def index(self, val):
+        '''Return leftmost index at which val is found (or raise ValueError)'''
+        for j in range(len(self)):
+            if self[j] == val:
+                return j
+        raise ValueError('value not in sequence')       # never found a match
+    
+    def count(self, val):
+        '''Return the number of elements equal to given value'''
+        k = 0
+        for j in range(len(self)):
+            if self[j] == val:
+                k += 1
+        return k
