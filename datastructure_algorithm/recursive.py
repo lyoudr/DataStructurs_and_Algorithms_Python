@@ -37,6 +37,16 @@ def disk_usage(path): # a type of Multiple Recursion
 # The idea that we can sometimes get a tighter bound on a series of operations by considering the cumulative effect
 # rather than assuming that each achieves a worst case is a technique called amortization.
 
+
+# English Ruler 
+def draw_interval(center_length):
+    """Draw tick interval based upon a central tick length."""
+    if center_length > 0:
+        draw_interval(center_length - 1)
+        draw_line(center_length)
+        draw_interval(center_length - 1)
+
+
 # 4.3 Recursion Run Amok
 # Although recursion is a very powerful tool, it can easily be 
 # An Inefficient Recursion for Computing Fibonacci Numbers
@@ -73,7 +83,7 @@ def good_fibonacci(n): # O(n)
 # If a recursive call may start three or more others, this is multiple recursion.
 
 # 4.4.1 Linear Recursion
-
+# the "linear recursion" terminology reflects the structure of the recursion trace
 # Summing the Elements of a Sequence Recursively
 # A recursive algorithm for computing the sum of a sequence of numbers based on this intuition is implemented in Figure 4.9
 def linear_sum(S, n):

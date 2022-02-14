@@ -47,3 +47,17 @@ class Solution:
         print('target_n is =>', target_n)
         self.rm_node(self.head, target_n, 1)
         return self.display(self.head, [])
+
+
+# Remove the val equal to the input value
+class Solution:
+    def removeElements(self, head: ListNode, val: int) -> ListNode:
+        temp = cur = ListNode()
+        temp.next = head
+        if cur.next:
+            if cur.next.val == val:
+                cur.next = cur.next.next
+            else:
+                cur = cur.next
+            self.removeElements(cur, val)
+        return temp.next

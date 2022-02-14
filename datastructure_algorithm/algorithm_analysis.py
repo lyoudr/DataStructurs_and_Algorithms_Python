@@ -13,7 +13,7 @@
 # 3. The Linear Function
 # f(n) = n
 
-# a. Find Max
+# a. Find Maxf
 def find_max(data):
     ''' Return the maximum element from a nonempty Python list.'''
     biggest = data[0]

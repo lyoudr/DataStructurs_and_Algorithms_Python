@@ -390,7 +390,7 @@ from abc import ABCMeta, abstractmethod
 class Sequence(metaclass = ABCMeta):
     '''Our own version of collections.Sequence abstract base class.'''
 
-    @abstractmethod
+    @abstractmethod  # The second advanced technique is the use of the @abstractmethod decorator immediately before the __len__ and __get__item
     def __len__(self):
         '''Return the length of the sequence.'''
     
@@ -419,3 +419,6 @@ class Sequence(metaclass = ABCMeta):
             if self[j] == val:
                 k += 1
         return k
+
+# Nested Classes
+# Nesting one class in the scope of another makes clear that the nested class exists for support of the outer class.

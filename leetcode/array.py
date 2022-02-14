@@ -49,3 +49,22 @@ class Solution:
 
 
 ### Validate Binary Search Tree
+# 26. Remove Duplicates from Sorted Array
+
+class Solution:
+    def rmv(self, nums, index):
+        cur = nums[index]
+        if index + 1 <= len(nums) - 1 and cur <= nums[index + 1]:
+            if nums[index + 1] == cur:
+                nums.append(nums.pop(index + 1))
+            else:
+                index += 1
+            self.rmv(nums, index)
+        return nums
+
+    def removeDuplicates(self, nums: List) -> int:
+        if len(nums) > 1:
+            return self.rmv(nums, 0)
+        else:
+            return nums
+        

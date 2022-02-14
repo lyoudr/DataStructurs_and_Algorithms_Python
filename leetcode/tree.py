@@ -56,9 +56,5 @@ class Solution:
         elif not root.left and not root.right:
             return True
         return self.is_symmetric(root.left, root.right)
-        
 
 
-
-def scale(data, factor):
-    """Multiply all entries of numeric data list by the given factor"""

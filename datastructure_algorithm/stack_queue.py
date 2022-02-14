@@ -210,12 +210,11 @@ class DeQue :
             self._resize(2 * len(self._data))                  # double the array size
         # avail => the right index to add new element
         avail = (self._front + self._size) % len(self._data) # adding element to circular queue
-        print('avail is =>', avail) 
         self._data[avail] = e
-        print('self._data is =>', self._data)
         self._size += 1
         self._back = (self._front + self._size - 1) % len(self._data)
     
+
     def add_first(self, e):
         ''' Add an element to the front of the queue. '''
         if self._size == len(self._data):
@@ -224,7 +223,6 @@ class DeQue :
         if self._data[self._front] :
             self._front = (self._front - 1) % len(self._data)
         self._data[self._front] = e
-        print('self._data is =>', self._data)
         self._size += 1
         self._back = (self._front + self._size - 1) % len(self._data)
     
@@ -240,8 +238,6 @@ class DeQue :
         self._back = (self._front + self._size - 1) % len(self._data)
         if 0 < self._size < len(self._data) // 4:
             self._resize(len(self._data) // 2)
-        print('self._front is =>', self._back)
-        print('self._data is =>', self._data)
         return answer
 
     def delete_first(self):
@@ -256,8 +252,6 @@ class DeQue :
         self._size -= 1
         if 0 < self._size < len(self._data) // 4:
             self._resize(len(self._data) // 2)
-        print('self._front is =>', self._front)
-        print('self._data is =>', self._data)
         self._back = (self._front + self._size - 1) % len(self._data)
         return answer
 
