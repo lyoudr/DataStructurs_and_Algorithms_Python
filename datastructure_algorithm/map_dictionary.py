@@ -1,8 +1,6 @@
-from typing import MutableMapping
-
-
 from collections.abc import MutableMapping
-
+from typing import MutableMapping
+from random import randrange
 # Map
 class MapBase(MutableMapping):
     '''Our own abstract base class that includes a nonpublic _Item class.'''
@@ -66,7 +64,77 @@ class UnsortedTableMap(MapBase):
         for item in self._table:
             yield item._key
 
-from random import randrange
+
+### 10.2 Hash Tables
+# 1. has code
+"""
+        Arbitrary Objects
+            ||  hash code 
+        -2,-1,0,1,2
+            ||  compression function (not restricted to the size of hash table)
+        0, 1, 2, 3, 4 (meet the size of hash table)
+* hash function = hash code + compression funcion
+"""     
+def hash_code(s):
+    mask = (1 << 32) - 1      # limit to 32-bit integers
+    h = 0
+    for character in s:
+        h = (h << 5 & mask) | (h >> 27)
+        h += ord(character)
+    return h
+
+# 2. Compression method
+# (1) Division Method
+# N is better to be a prime
+"""
+    i mod N,
+    
+"""
+# (2) The MAD Method
+# N : the size of the bucket array
+# a and b: integers chosen at random from the interval [0, p-1]
+# p is a prime number larger than N
+"""
+    [(ai + b) mod p] mod N
+"""
+
+
+## Collision-Handling Schemes
+"""
+    n = items of our map in a bucket array of capacity N
+    load factor = n/N
+"""
+# 1. Separate Chaning
+"""
+    k : key
+    v : value
+    A : bucket array => [[list], [list], [list], [list], ...]
+    h : has function
+
+    function store (k, v) to A:
+        j = h(k)
+        if there is item in A[h(k)]:
+            A[h(k)].append(v)
+        else:
+            A[h(k)] = [v]
+"""
+# 2. Linear Probing
+"""
+    k : key
+    v : value
+    A : bucket array 
+    h : has function
+
+    function store (k, v) to A:
+        j = h(k)
+        if A[j] is occupied, then try
+            A([j+1] mod N)
+            if A([j+1] mode N) is occupied, then try
+                A([j+2] mod N), and so on.
+        A[j] = v
+"""
+# Python's
+
 
 class HashMapBase(MapBase):
     '''Abstract base class for map using hash-table with MAD compression.'''
@@ -284,7 +352,6 @@ class SortedTableMap(MapBase):
     def __getitem__(self, k):
         '''Return value associated with key k (raise KeyError if not found).'''
         j = self._find_index(k, 0, len(self._table) - 1)
-        print('j is =>', j)
         if j == len(self._table) or self._table[j]._key != k:
             raise KeyError('Key Error: ' + repr(k))
         return self._table[j]._value
