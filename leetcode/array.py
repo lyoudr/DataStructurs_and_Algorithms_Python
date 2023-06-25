@@ -68,3 +68,14 @@ class Solution:
         else:
             return nums
         
+
+# Prefix algorithm 
+def prefix_average1(S):
+    n = len(S)
+    A = [0] * n
+
+    for j in range(1, n+1):
+        total_sum = sum(S[:j])
+        average = total_sum / j
+        A.append(average)
+    return A
