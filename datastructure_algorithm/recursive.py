@@ -151,3 +151,72 @@ def binary_sum(S, start, stop): # O(n)
 # dog + cat = pig
 # boy + girl = baby
 
+
+### An Inefficient Recursion for Computing Fibonacci Numbers 
+"""
+    F0 = 0
+    F1 = 1 
+    Fn = Fn-2 + Fn-1 for n > 1
+"""
+def fibonacci(n):
+    if n <= 1:
+        return 1
+    else:
+        return fibonacci(n-2) + fibonacci(n-1)
+    
+def good_fibonacci(n):
+    if n <= 1:
+        return (n, 0)
+    else:
+        print('a, b is ->', (a, b))
+        (a, b) = good_fibonacci(n-1)
+        print('a+b, a is ->' (a+b, a))
+        return (a+b, a)
+
+def linear_sum(S, n):
+    if n == 0:
+        return 0
+    else:
+        return linear_sum(S, n-1) + S[n-1]
+
+def reverse_seq(S, start, stop):
+    """Reverse elements in implicit slice S[start:stop]."""
+    if start < stop - 1:
+        S[start], S[stop-1] = S[stop-1], S[start]
+        reverse_seq(S, start+1, stop-1)
+
+def power(x, n):
+    if n == 0:
+        return 1
+    else:
+        return x * power(x, n-1)
+    
+def power(x, n):
+    if n == 0:
+        return 1
+    else:
+        partial = power(x, n // 2)
+        result = partial * partial 
+        if n % 2 == 1:
+            result *= x 
+        return result
+    
+# C-4.10
+# Describe a recursive algorithm to compute the integer part of the base-two logarithm of n using only addition and integer division
+def log(n, ans):
+    if n == 1:
+        return ans
+    else:
+        n = (n // 2)
+        ans += 1
+        return log(n, ans)
+# C-4.11 
+# Describe an efficient recursive function for solving the element uniqueness problem, which runs in time that is at most O(n2) in the worst case without using sorting
+def unique(S, start):
+    current = S[start]
+    if start + 1 < len(S):
+        for i in S[start+1:]:
+            if i == current:
+                return False
+        unique(S, start+1)
+    return True

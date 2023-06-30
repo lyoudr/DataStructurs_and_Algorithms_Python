@@ -69,13 +69,23 @@ class Solution:
             return nums
         
 
-# Prefix algorithm 
+# Prefix algorithm O(n2)
 def prefix_average1(S):
     n = len(S)
     A = [0] * n
 
     for j in range(1, n+1):
-        total_sum = sum(S[:j])
-        average = total_sum / j
-        A.append(average)
+        A[j] = sum(S[:j]) / j
     return A
+
+def prefix_average2(S):
+    n = len(S)
+    A = [0] * n
+    item_sum = 0
+
+    for index, item in enumerate(S):
+        item_sum += item 
+        A[index] = item_sum / (index + 1)
+    
+    return A
+
