@@ -163,7 +163,8 @@ def fibonacci(n):
         return 1
     else:
         return fibonacci(n-2) + fibonacci(n-1)
-    
+
+# good efficient fibonacci
 def good_fibonacci(n):
     if n <= 1:
         return (n, 0)
@@ -220,3 +221,25 @@ def unique(S, start):
                 return False
         unique(S, start+1)
     return True
+
+# C-4.15
+# Write a recursive function that will output all the subsets of a set of n
+# elements (without repeating any subsets).
+def find_all_subset(S, output:list, start, end):
+    if type(S) != list:
+        S = list(S)
+    subset = set()
+    if start < end and end <= len(S):
+        for i in S[start:end]:
+            subset.add(i)
+        output.append(subset)
+        end += 1
+        find_all_subset(S, output, start, end)
+    else:
+        start += 1
+        end = start + 1
+        if start <= len(S) - 1:
+            find_all_subset(S, output, start, end)
+        else:
+            return output
+        
