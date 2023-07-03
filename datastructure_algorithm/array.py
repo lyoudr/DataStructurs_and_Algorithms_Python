@@ -1,5 +1,44 @@
-import ctypes
+# 5.3 Dynamic Arrays and Amortization
+# Code Fragment 5.1: An experiemnt to explore the relationship between a list's length and its underlying size in Python
+import sys
+def define_size(n):
+    data = []
+    for k in range(n):
+        a = len(data)
+        b = sys.getsizeof(data)
+        print('Length: {0:3d}; Size in bytes: {1:4d}'.format(a, b))
+        data.append(None)
 
+# Exercise 
+# R-5.2: Redesign the experiment so that the program outputs only those values of k 
+# at which the existing capacity is exhausted. For example, on a system consistent with the results of Code Fragment 5.2
+# your program should output that the sequence of array capacities are 0, 4, 8, 16, 25     
+def output_define_size(n):
+    data = []
+    cur_size = sys.getsizeof(data)
+    output_index = []
+    for k in range(n):
+        data_size = sys.getsizeof(data)
+        if data_size != cur_size:
+            output_index.append(k-1)
+            cur_size = data_size
+        data.append(None)
+    return output_index
+
+# R-5.3 Modify the experiment from Code Fragment 5.1 in order to demonstrate that Python's list
+# class occasionally shrinks the size of its underlying array 
+# when elements are poped from a list
+def shrink(n):
+    data = [None] * n
+    for k in range(n):
+        a = len(data)
+        b = sys.getsizeof(data)
+        print('Length: {0:3d}; Size in bytes: {1:4d}'.format(a, b))
+        data.pop()
+
+
+import ctypes
+# Code Fragment 5.3
 class DynamicArray:
     '''A dynamic array class akin to a simplified Python list.'''
 
@@ -22,9 +61,12 @@ class DynamicArray:
     
     def __getitem__(self, k):
         '''Return element at index k.'''
-        if not 0 <= k < self._n:
+        if 0 <= k < self._n:
+            return self._A[k]                             # retrieve from array
+        elif 0 >= k > -self._n:
+            return self._A[self._n - abs(k)]
+        else:
             raise IndexError('invalid index')
-        return self._A[k]                             # retrieve from array
 
 
     def _resize(self, c): # O(n)                      # nonpublic utitity
@@ -35,6 +77,9 @@ class DynamicArray:
         self._A = B                                   # use the bigger array
         self._capacity = c                            # set capacity to double size
 
+    def _improved_resize(self, c):
+        B = self._make_array(c)
+        B[:self._n] = self._A[:]
 
     def _make_array(self, c):                         # nonpublic utility
         '''Return new array with capacity c.'''
@@ -44,9 +89,7 @@ class DynamicArray:
         '''Insert value at index k, shifting subsequent values rightward.'''
         if self._n == self._capacity:                 # not enough room
             self._resize(2 * self._capacity)          # so double capacity
-
         for j in range(self._n, k, -1):               # shift rightmost first
-            print('j is =>', j)
             self._A[j] = self._A[j-1]
         self._A[k] = value
         self._n += 1                                  # store newest element
@@ -67,6 +110,41 @@ class DynamicArray:
         for index in range(0, self._n):
             print(self._A[index])
 
+# Exercises
+# R-5.4 : Our DynamicArray class, as given in Code Fragment 5.3, does not support
+# use of negative indices with __getitem__. Update that method to better 
+# match the semantics of a Python list.
+def __getitem__(self, k):
+    '''Return element at index k.'''
+    if 0 <= k < self._n:
+        return self._A[k]                             # retrieve from array
+    elif 0 >= k > -self._n:
+        return self._A[self._n - abs(k)]
+    else:
+        raise IndexError('invalid index')
+
+# R-5.6 Our implementation of insert for the DynamicArray class, as given in Code Fragment 5.5, 
+# has the following inefficiency. In the case when a re- size occurs, 
+# the resize operation takes time to copy all the elements from an old array to a new array, 
+# and then the subsequent loop in the body of insert shifts many of those elements. 
+# Give an improved implementation of the insert method, so that, 
+# in the case of a resize, the elements are shifted into their final position during that operation, 
+# thereby avoiding the subsequent shifting.
+def _improved_resize(self, c):
+    B = self._make_array(c)
+    B[:self._n] = self._A[:]
+
+
+# R-5.7 Let A be array of size n >= 2 containing integers from 1 to n-1, inclusive, with exactly one repeated.
+# Describe a fast algorithm for finding the integer in A that is repeated
+def find_repeat(A):
+    record = {}
+    for i in A:
+        if not record.get(i):
+            record[i] = True
+        else:
+            return i 
+    return None
 
 # 5.3.2 Amortized Analysis of Dynamic Arrays  
 # However, notice that by doubling the capacity during an array replacemment, our new array allows us to add n new 
@@ -191,7 +269,7 @@ def insertion_sort(A):
         while j > 0 and A[j - 1] > cur:
             A[j] = A[j - 1]
             j -= 1
-        A[j] = cur
+        A[j] = cur                       
 
 # 5.5.3 Simple Cryptography
 
