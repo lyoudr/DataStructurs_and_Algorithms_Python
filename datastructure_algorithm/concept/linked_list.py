@@ -83,7 +83,9 @@ class LinkedStack:
             self.traverse(e._next)
 
 
-class LinkedQueue : 
+
+
+class LinkedQueue: 
     ''' FIFO queue implementation using a singly linked list for storage. '''
     
     class _Node :
@@ -150,7 +152,6 @@ class LinkedQueue :
             if e._next:
                 self.traverse(e._next)
         
-
     def count(self, node):
         self._count += 1
         if node._next:
@@ -168,7 +169,10 @@ class LinkedQueue :
         node_x._element = y_value
         node_y._element = x_value
         self.traverse(self._head)
-        
+
+
+
+
 ## 7.2.1 Round-Robin Schedulers
 # 7.2.2 Implementing a Queue with a Circularly Linked List 
 # CircularQueue class
